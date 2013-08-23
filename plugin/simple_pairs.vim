@@ -35,11 +35,18 @@ python << endpython
 c = vim.eval("a:c")
 matchingPair = pairs[c]
 nextChar = getNextChar()
+#check if option is enabled
+isEnabled = vim.eval("g:Simple_Pair_Enabled") == "1"
+
 if nextChar == None:
     insertPair = True
 else:
     insertPair = (nextChar == matchingPair # to nest pairs
                   or nextChar in " ,:.")
+
+if isEnabled == 0:
+    insertPair = None
+
 if insertPair:
     result = "%s%s" % (c, matchingPair)
 else:
@@ -89,4 +96,4 @@ for open, close in pairs.items():
     vim.command("inoremap <silent> %s <C-R>=<SID>InsertPair(%r)<CR>" % (open, open))
 endpython
 inoremap <silent> <BS> <C-R>=<SID>Backspace()<CR>
-
+let g:Simple_Pair_Enabled=1 
